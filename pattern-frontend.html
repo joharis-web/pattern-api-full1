@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Patterned Number Frontend — Fetch API</title>
+  <style>body{font-family:Inter,Arial;background:#071022;color:#e7f0ff;padding:18px} .card{background:rgba(255,255,255,0.02);padding:14px;border-radius:10px;max-width:900px;margin:0 auto}</style>
+</head>
+<body>
+  <div class="card">
+    <h2>Frontend — Pattern API</h2>
+    <p>Masukkan endpoint API (contoh: <code>https://your-app.vercel.app/api/pattern</code>), lalu klik Fetch.</p>
+    <input id="ep" style="width:100%;padding:8px" placeholder="https://your-app.vercel.app/api/pattern" />
+    <div style="margin-top:8px"><button id="go">Fetch</button> <button id="local">Generate Lokal</button></div>
+    <div id="out" style="margin-top:12px"></div>
+  </div>
+<script>
+async function fetchApi(ep){
+  try{
+    const res = await fetch(ep);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const j = await res.json();
+    return j;
+  }catch(e){console.warn(e);return null}
+}
+document.getElementById('go').addEventListener('click', async ()=>{
+  const ep = document.getElementById('ep').value.trim();
+  const j = await fetchApi(ep);
+  if(!j){ document.getElementById('out').innerText = 'Gagal fetch — gunakan fallback lokal atau periksa CORS/URL.'; return; }
+  document.getElementById('out').innerText = JSON.stringify(j, null, 2);
+});
+document.getElementById('local').addEventListener('click', ()=>{
+  const d = new Date(); const num = String(Math.floor(1000+Math.random()*9000)); const out = {date:d.toISOString(), number:num, shio:'Ular', zodiac:'Leo', dream:'Mimpi dummy', erek:'23'};
+  document.getElementById('out').innerText = JSON.stringify(out, null, 2);
+});
+</script>
+</body>
+</html>
